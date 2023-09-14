@@ -7,9 +7,11 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
+  SkipSelf
 } from '@angular/core';
 import { Room, RoomList } from './rooms';
 import { HeaderComponent } from '../header/header.component';
+import { RoomsService } from './services/rooms.service';
 
 @Component({
   selector: 'hinv-rooms',
@@ -36,7 +38,9 @@ export class RoomsComponent
   @ViewChildren(HeaderComponent)
   headerChildrenComponent!: QueryList<HeaderComponent>;
 
-  constructor() {}
+  // roomService = new RoomsService();
+
+  constructor(@SkipSelf() private roomsService:RoomsService) {}
   toggle() {
     this.hideRooms = !this.hideRooms;
     this.title = 'Rooms List';
@@ -45,39 +49,7 @@ export class RoomsComponent
     console.log('On changes is called');
   }
   ngOnInit(): void {
-    // console.log(this.headerComponent);
-    this.roomList = [
-      {
-        roomNumber: 101,
-        roomType: 'Deluxe Room',
-        amenities: 'Air conditioner,Free Wifi,Tv,BathRoom,Kitchen',
-        price: 500,
-        photos:
-          'https://images.unsplash.com/photo-1586105251261-72a756497a11?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=958&q=80',
-        checkInTime: new Date('11-Nov-2021'),
-        checkOutTime: new Date('12-Nov-2021'),
-      },
-      {
-        roomNumber: 102,
-        roomType: 'Deluxe Room',
-        amenities: 'Air conditioner,Free Wifi,Tv,BathRoom,Kitchen',
-        price: 1000,
-        photos:
-          'https://images.unsplash.com/photo-1586105251261-72a756497a11?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=958&q=80',
-        checkInTime: new Date('11-Nov-2021'),
-        checkOutTime: new Date('12-Nov-2021'),
-      },
-      {
-        roomNumber: 103,
-        roomType: 'Private Suite',
-        amenities: 'Air conditioner,Free Wifi,Tv,BathRoom,Kitchen',
-        price: 15000,
-        photos:
-          'https://images.unsplash.com/photo-1586105251261-72a756497a11?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=958&q=80',
-        checkInTime: new Date('11-Nov-2021'),
-        checkOutTime: new Date('12-Nov-2021'),
-      },
-    ];
+    this.roomList=this.roomsService.getRooms();
   }
   ngAfterViewInit(): void {
     // console.log(this.headerComponent);
@@ -85,6 +57,7 @@ export class RoomsComponent
     this.headerChildrenComponent.last.title = 'Last Title';
   }
   ngAfterViewChecked(): void {}
+
   selectRoom(room: RoomList) {
     this.selectedRoom = room;
   }
